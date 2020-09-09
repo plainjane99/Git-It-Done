@@ -1,6 +1,9 @@
-// reference to the issues container
+// reference to the issues container in order to add looped issues
 var issueContainerEl = document.querySelector("#issues-container");
+// reference to the limit warning container in order to display warning
+var limitWarningEl = document.querySelector("#limit-warning");
 
+// function that fetches repo issues
 var getRepoIssues = function(repo) {
 
     var apiUrl = "https://api.github.com/repos/" + repo + "/issues?direction=asc";
@@ -11,6 +14,12 @@ var getRepoIssues = function(repo) {
             response.json().then(function(data) {
                 // pass response data to dom function
                 displayIssues(data);
+
+                // checks for the "link" header to determine if there are more than 30 issues
+                // check if api has paginated issues
+                if (response.headers.get("Link")) {
+                    displayWarning(repo);
+                }
             });
         }
         else {
@@ -19,6 +28,7 @@ var getRepoIssues = function(repo) {
     });
 };
 
+// function that displays issues for repo
 var displayIssues = function(issues) {
     // account for the possibility that there are no open issues
     if (issues.length === 0) {
@@ -60,10 +70,25 @@ var displayIssues = function(issues) {
 
         // finally append newly created container to html id container so that it will display
         issueContainerEl.appendChild(issueEl);
-
     }
-
 };
-// getRepoIssues("facebook/react");
+
+// function to create warning if issues exceeds 30
+var displayWarning = function(repo) {
+    // add text to warning container
+    limitWarningEl.textContent = "To see more than 30 issues, visit ";
+
+    // create a link and format the site to visit
+    // create an <a> element for the link
+    var linkEl = document.createElement("a");
+    linkEl.textContent = "See More Issues on GitHub.com";
+    linkEl.setAttribute("href", "https://github.com/" + repo + "/issues");
+    linkEl.setAttribute("target", "_blank");
+
+    // append to warning container
+    limitWarningEl.appendChild(linkEl);
+};
+
+getRepoIssues("facebook/react");
 // getRepoIssues("plainjane99/git-it-done");
-getRepoIssues("plainjane99/run_buddy");
+// getRepoIssues("plainjane99/run_buddy");
