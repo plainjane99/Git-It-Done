@@ -66,7 +66,7 @@ var displayRepos = function(repos, searchTerm) {
 // user input from form submission is passed into the function as "user"
 var getUserRepos = function(user) {
     // format the github api url to the user-requested username
-    // we are specifically calling out the repo data url as our starting point
+    // we are specifically calling out the repo data url as our "endpoint"
     var apiUrl = "https://api.github.com/users/" + user + "/repos";
 
     // fetches the repo data with the formatted url.
@@ -78,6 +78,7 @@ var getUserRepos = function(user) {
             // handles the error caused if user does not exist
             // the ok property is a bundled response in fetch()
             if (response.ok) {
+            // json string to an object
             // the resulting object in the response variable is formatted to JSON and is input to the data variable
                 // JSON is a format that we can understand.
                 // See 6.1.5 //
