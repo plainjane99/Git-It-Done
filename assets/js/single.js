@@ -2,6 +2,33 @@
 var issueContainerEl = document.querySelector("#issues-container");
 // reference to the limit warning container in order to display warning
 var limitWarningEl = document.querySelector("#limit-warning");
+// reference to the repo-name container in order to add a repo name to the header
+var repoNameEl = document.querySelector("#repo-name");
+
+// function to get the repo name from the url of this page
+// the url of this page is an extension + a query extension to the base page
+var getRepoName = function() {
+    // Location Web API is a browser-based tool that will help us retrieve the query parameter
+    // the location object is a property of the document object
+    // search is a property of the location object and represents the query string
+    // create a variable to hold the query string
+    var queryString = document.location.search;
+    // split the query string at the = character to parse out the query extension search parameter
+    // split will split the extension into two pieces so we are using index 1 to retrieve the second piece
+    var repoName = queryString.split("=")[1];
+
+    // if repoName is truthy, i.e. repoName given
+    if (repoName) {
+        // appends the header with the repo name
+        repoNameEl.textContent = repoName;
+        // calls this function to get the repo issues based off of repo name
+        getRepoIssues(repoName);
+    }
+    // if repoName was not given, redirect to home page
+    else {
+        document.location.replace("./index.html");
+    }
+}
 
 // function that fetches repo issues
 var getRepoIssues = function(repo) {
@@ -23,7 +50,7 @@ var getRepoIssues = function(repo) {
             });
         }
         else {
-            alert("There was a problem with your request!");
+            document.location.replace("./index.html");
         }
     });
 };
@@ -89,6 +116,4 @@ var displayWarning = function(repo) {
     limitWarningEl.appendChild(linkEl);
 };
 
-getRepoIssues("facebook/react");
-// getRepoIssues("plainjane99/git-it-done");
-// getRepoIssues("plainjane99/run_buddy");
+getRepoName();
