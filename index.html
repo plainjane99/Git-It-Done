@@ -20,8 +20,8 @@
 
 
   <main class="flex-row justify-space-between">
-    <!--This is the submission form section using a card-->
     <div class="col-12 col-md-4">
+      <!--This is the submission form section using a card-->
       <div class="card">
         <h3 class="card-header text-uppercase">Search By User</h3>
         <form id="user-form" class="card-body">
@@ -30,7 +30,18 @@
           <button type="submit" class="btn">Get User</button>
         </form>
       </div>
+
+      <!--This is the search-by-topic section using a card-->
+      <div class="card">
+        <h3 class="card-header text-uppercase">Search by Topic</h3>
+        <div id="language-buttons" class="card-body">
+          <button class="btn" data-language="javascript">JavaScript</button>
+          <button class="btn" data-language="html">HTML</button>
+          <button class="btn" data-language="css">CSS</button>
+        </div>
+      </div>
     </div>
+
     <!--This is the display area-->
     <div class="col-12 col-md-8">
       <!--created a span to display the username that was searched-->

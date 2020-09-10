@@ -1,10 +1,14 @@
 // Global variables and Reference to DOM elements go here
-// stores the reference to the <form> element
+// stores the reference to the <form> element for the event listener
 var userFormEl = document.querySelector("#user-form");
-// stores the reference to the <input> element
+// stores the reference to the <input> element in which the user fills a value
 var nameInputEl = document.querySelector("#username");
+// stores the reference to the column in which we will display the repo data
 var repoContainerEl = document.querySelector("#repos-container");
+// stores the reference to the line in which we will display the user name
 var repoSearchTerm = document.querySelector("#repo-search-term");
+// stores the reference to the buttons for the code languages
+var languageButtonsEl = document.querySelector("#language-buttons");
 
 // function that displays the repos. expects an array and a search term to be passed into function.
 var displayRepos = function(repos, searchTerm) {
@@ -118,5 +122,46 @@ var formSubmitHandler = function(event) {
     }
 }
 
+// accepts a language paramater, creates and API endpoint, and makes an http request to that endpoint
+var getFeaturedRepos = function(language) {
+    // making this url the endpoint 
+    // this endpoint allows searching on a specific code and is a featured github page
+    var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
+    // fetch to the endpoint we created
+    fetch(apiUrl).then(function(response) {
+        // handles the error caused if xxxxxxxxxxxx
+        // the ok property is a bundled response in fetch()
+        if (response.ok) {
+            // json string to an object
+            // the resulting object in the response variable is formatted to JSON and is input to the data variable
+            response.json().then(function(data) {
+                displayRepos(data.items, language);
+            });
+        } else {
+            alert("Error: " + response.statusText);
+        }
+    });
+};
+
+// function that handles the click events
+// we will use event delegation rather than creating click listeners for each button
+// we will delegate click handling on these elements to their parent elements
+var buttonClickHandler = function(event) {
+    // the browser's event object had a target property that tells us exactly which html element was interacted with to create the event
+    // the getAttribute method reads the data-language attribute's value assigned to the element
+    var language = event.target.getAttribute("data-language");
+    console.log(language);
+
+    if (language) {
+        // calls the featured repo function and passes the user-selected language to that function
+        getFeaturedRepos(language);
+        // clear old content
+        repoContainerEl.textContent = "";
+    }
+}
+
 // event listener for submission of form
 userFormEl.addEventListener("submit", formSubmitHandler);
+
+// event listener added to the div element that will call a handler function
+languageButtonsEl.addEventListener("click", buttonClickHandler);
